@@ -1,0 +1,3 @@
+#!/bin/bash
+gcc selecttcp2.c -o selecttcp2 -pthread
+arm-linux-gcc ../client/main.c -o ../client/main -pthread
