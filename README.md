@@ -20,6 +20,6 @@
                   ip
                   port
                   sock
-                  int friendflag=0; //区分好友的类别
-             }
+                  int friendflag=0; //区分好友的类别_
+             } 
     3.发送的文字信息在对方的开发板屏幕上显示，而不是在CRT打印
