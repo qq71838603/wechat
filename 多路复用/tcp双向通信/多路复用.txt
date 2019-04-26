@@ -1,0 +1,32 @@
+
+多路复用
+=====================
+1.多路复用：说白了就是来监测多个文件描述符的状态 --》相当于电子警察，侦查文件描述符
+2.相关的接口函数
+     (1)监测文件描述符的状态
+          根据我们的分析：select函数肯定要解决如下两个问题
+              问题一：监测哪些文件描述符(几个？？1个2个多个)---》定义一个集合将你想要监测的文件描述符全部添加到这个集合中
+              问题二：文件描述符有哪些状态()---》读  写  异常三种状态
+              问题三：select函数如何知道监测的文件描述符发生了状态改变？？
+                        重点三：如果某个文件描述符发生了状态改变，那么select会将它保留在集合中(而那些状态没有发生改变的文件描述符会被自动从集合中清除)
+           int select(int nfds, fd_set *restrict readfds,
+              fd_set *restrict writefds, fd_set *restrict errorfds,
+              struct timeval *restrict timeout);
+                  重点一：fd_set系统定义的用于存放文件描述符的集合
+                    返回值：> 0   成功
+                            ==0   超时
+                            <0    失败
+                      参数：nfds  重点二 你要监测的所有文件描述符最大的那个值+1
+                            readfds  监测可读(监测读就绪)
+                            writefds 监测可写(写就绪)
+                            errorfds 监测异常
+                            timeout  设置超时等待时间 
+      (2)关于文件描述符集合操作的函数
+           void FD_CLR(int fd, fd_set *fdset);//将文件描述符fd从集合中删除
+           int FD_ISSET(int fd, fd_set *fdset);//判断fd在不在集合中，如果fd在集合中>0   不在 返回值==0
+           void FD_SET(int fd, fd_set *fdset);//将fd添加到集合中
+           void FD_ZERO(fd_set *fdset); //清空集合
+经验：
+       使用多路复用：你只需要想清楚你要监测哪些文件描述符(分析就知道了)  
+       思路：新建一个集合变量--》清空集合--》往集合中添加你要监测的文件描述符
+
